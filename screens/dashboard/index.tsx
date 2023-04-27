@@ -2,7 +2,7 @@ import { Session } from '@supabase/supabase-js';
 import { useBackgroundPermissions, useForegroundPermissions } from 'expo-location';
 import { useState, useEffect } from 'react';
 import MapView, { LatLng, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
-import { Button, Text, View } from 'react-native-ui-lib';
+import { Button, Colors, Text, View } from 'react-native-ui-lib';
 
 import { supabase } from '../../config/supabase';
 import useLocationObserver from '../../contexts/location/location.observer';
@@ -93,6 +93,10 @@ const DashboardScreen = ({ session }: DashboardScreenProperties) => {
     setIsTripStarted(false);
   };
 
+  const handleLogout = () => {
+    supabase.auth.signOut();
+  };
+
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       <MapView
@@ -126,6 +130,16 @@ const DashboardScreen = ({ session }: DashboardScreenProperties) => {
         <Button
           label={isTripStarted ? 'Arrêter le trajet' : 'Démarrer un trajet'}
           onPress={isTripStarted ? handleStopTrackingTrip : handleStartTrackingTrip}
+        />
+        <Button
+          label="Déconnexion"
+          borderRadius={8}
+          size={Button.sizes.large}
+          backgroundColor={Colors.red30}
+          onPress={handleLogout}
+          style={{
+            marginBottom: 8,
+          }}
         />
       </View>
     </View>

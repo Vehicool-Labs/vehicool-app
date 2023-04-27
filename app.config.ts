@@ -6,8 +6,8 @@ import { ConfigContext, ExpoConfig } from 'expo/config';
 
 const AppConfig = ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: process.env.APP_NAME,
-  slug: process.env.APP_NAME,
+  name: process.env.APP_NAME || 'vehicool',
+  slug: process.env.APP_NAME || 'vehicool',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
@@ -15,12 +15,12 @@ const AppConfig = ({ config }: ConfigContext): ExpoConfig => ({
   splash: {
     image: './assets/splash.png',
     resizeMode: 'contain',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#F8F9FE',
   },
   assetBundlePatterns: ['**/*'],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: process.env.APP_BUNDLE_IDENTIFIER,
+    bundleIdentifier: process.env.APP_BUNDLE_IDENTIFIER || 'fr.vehicool.www',
     infoPlist: {
       infoPlist: {
         UIBackgroundModes: ['location', 'fetch'],
@@ -33,7 +33,7 @@ const AppConfig = ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#F8F9FE',
     },
     package: process.env.APP_BUNDLE_IDENTIFIER,
   },
