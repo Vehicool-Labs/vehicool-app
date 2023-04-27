@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "car-tracking",
-    "slug": "car-tracking",
+    "name": "Vehicool",
+    "slug": "vehicool",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

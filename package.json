@@ -1,5 +1,5 @@
 {
-  "name": "car-tracking",
+  "name": "vehicool",
   "version": "1.0.0",
   "scripts": {
     "dev": "expo start",

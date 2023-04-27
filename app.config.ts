@@ -6,8 +6,8 @@ import { ConfigContext, ExpoConfig } from 'expo/config';
 
 const AppConfig = ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: process.env.APP_NAME || 'vehicool',
-  slug: process.env.APP_NAME || 'vehicool',
+  name: 'Vehicool',
+  slug: 'vehicool',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
