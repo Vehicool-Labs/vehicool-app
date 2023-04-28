@@ -23,6 +23,7 @@ const useForm = ({ initialValues }: FormProperties) => {
   const isFormInvalid = Object.entries(formState).find(([, value]) => !value.isValid);
 
   const handleChangeValue = (fieldName: string) => (value: any) => {
+    console.log('CHANGE', fieldName, value);
     setFormState((prevValue) => ({
       ...prevValue,
       [fieldName]: {

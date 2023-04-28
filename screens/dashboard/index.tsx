@@ -1,8 +1,10 @@
+import { faUser } from '@fortawesome/pro-light-svg-icons/faUser';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Session } from '@supabase/supabase-js';
 import { useBackgroundPermissions, useForegroundPermissions } from 'expo-location';
 import { useState, useEffect } from 'react';
 import MapView, { LatLng, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
-import { Button, Colors, Text, View } from 'react-native-ui-lib';
+import { Button, Colors, View } from 'react-native-ui-lib';
 
 import { supabase } from '../../config/supabase';
 import useLocationObserver from '../../contexts/location/location.observer';
@@ -141,6 +143,7 @@ const DashboardScreen = ({ session }: DashboardScreenProperties) => {
             marginBottom: 8,
           }}
         />
+        <FontAwesomeIcon icon={faUser} />
       </View>
     </View>
   );

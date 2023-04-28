@@ -12,9 +12,14 @@ export const translateAuthError = (error: AuthError): TranslatedError => {
         title: 'Indentifiants incorrects.',
         message: 'Veuilliez vérifier vos identifiants.',
       };
+    case 'User already registered':
+      return {
+        title: 'Adresse email déjà enregistrée.',
+        message: "Merci de vous connecter ou d'utiliser une autre adresse pour créer un compte.",
+      };
     default:
       return {
-        title: 'Erreur',
+        title: 'Erreur.',
         message: 'Une erreur est survenue, veuillez réessayer plus tard.',
       };
   }

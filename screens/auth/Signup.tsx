@@ -1,134 +1,118 @@
-import { useState } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
-import { Button, Colors, Text, TextField, View } from 'react-native-ui-lib';
+import { Alert, Dimensions, KeyboardAvoidingView, SafeAreaView } from 'react-native';
+import { Button, Colors, Image, Text, View } from 'react-native-ui-lib';
 
-import { supabase } from '../../config/supabase';
+import Input from '../../components/forms/inputs/Input';
+import useForm from '../../hooks/useForm';
+import { signUpWithEmailAndPassword } from '../../services/auth.service';
+import { ApiResponseError } from '../../utils/error.util';
 
 const validatePassword = (value: string) => value.length >= 8;
 const validatePasswordConfirm = (valueToCompare: string) => (value: string) =>
   valueToCompare === value;
 
-type SignupFormState = Record<string, { value: any; isValid: boolean }>;
+const dimensions = Dimensions.get('window');
+const imageHeight = Math.round((dimensions.width * 9) / 16);
+const imageWidth = dimensions.width;
 
 const SignupScreen = ({ navigation }) => {
-  const [formState, setFormState] = useState<SignupFormState>({});
-
-  const getFormValidationState = () => Object.entries(formState).find(([, value]) => value.isValid);
-
-  const handleChangeValue = (fieldName: string) => (value: any) => {
-    setFormState((prevValue) => ({
-      ...prevValue,
-      [fieldName]: {
-        ...prevValue[fieldName],
-        value,
-      },
-    }));
-  };
-
-  const handleChangeValidity = (fieldName: string) => (isValid: boolean) => {
-    setFormState((prevValue) => ({
-      ...prevValue,
-      [fieldName]: {
-        ...prevValue[fieldName],
-        isValid,
-      },
-    }));
-  };
+  const { formState, handleChangeValue, handleValidateInput, isFormInvalid } = useForm({});
 
   const handleSubmit = async () => {
-    console.log('SUBMIT', formState);
-    const { error, data } = await supabase.auth.signUp({
-      email: formState.email.value,
-      password: formState.password.value,
-    });
-    if (error) {
-      console.log(error);
+    if (isFormInvalid) {
       return;
     }
-    console.log('Signed in', data);
-    navigation.navigate('Dashboard');
+    try {
+      const sessionData = await signUpWithEmailAndPassword(
+        formState.email.value,
+        formState.password.value
+      );
+      console.log('SESSION DATA', sessionData);
+      navigation.navigate('Dashboard');
+    } catch (error) {
+      const apiError: ApiResponseError = error;
+      Alert.alert(apiError.cause || 'Erreur', apiError.message, []);
+    }
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="height"
+    <SafeAreaView
       style={{
-        padding: 20,
-        display: 'flex',
-        justifyContent: 'center',
         height: '100%',
+        backgroundColor: Colors.white,
       }}>
-      <View>
-        <Text text30>Inscrivez-vous</Text>
-        <TextField
-          placeholder="Adresse email"
-          floatingPlaceholder
-          onChangeText={handleChangeValue('email')}
-          enableErrors
-          validate={['required', 'email', (value) => value.length > 6]}
-          validationMessage={['Champ requis.', 'Adresse email invalide.']}
-          style={{
-            borderBottomColor: 'black',
-            borderBottomWidth: 1,
-            paddingBottom: 8,
-          }}
-          validateOnBlur
-          onChangeValidity={handleChangeValidity('email')}
-        />
-        <TextField
-          placeholder="Mot de passe"
-          floatingPlaceholder
-          enableErrors
-          validate={['required', validatePassword]}
-          validationMessage={[
-            'Champ requis.',
-            'Le mot de passe doit contenir au moins 8 caractères.',
-          ]}
-          style={{
-            borderBottomColor: 'black',
-            borderBottomWidth: 1,
-            paddingBottom: 8,
-          }}
-          onChangeText={handleChangeValue('password')}
-          validateOnChange
-          onChangeValidity={handleChangeValidity('password')}
-        />
-        <TextField
-          placeholder="Confirmer le mot de passe"
-          floatingPlaceholder
-          onChangeText={handleChangeValue('passwordConfirm')}
-          enableErrors
-          validate={['required', validatePasswordConfirm(formState.password.value)]}
-          validationMessage={['Champ requis.', 'Doit être identique au mot de passe']}
-          style={{
-            borderBottomColor: 'black',
-            borderBottomWidth: 1,
-            paddingBottom: 8,
-          }}
-          validateOnChange
-          onChangeValidity={handleChangeValidity('passwordConfirm')}
-        />
-        <Button
-          label="Inscription"
-          borderRadius={8}
-          size={Button.sizes.large}
-          backgroundColor={Colors.purple30}
-          disabled={!getFormValidationState()}
-          onPress={handleSubmit}
-          style={{
-            marginBottom: 8,
-          }}
-        />
-        <Button
-          label="Déjà un compte ? Se connecter"
-          size={Button.sizes.medium}
-          backgroundColor={Colors.transparent}
-          color="black"
-          link
-          onPress={() => navigation.navigate('Inscription')}
-        />
-      </View>
-    </KeyboardAvoidingView>
+      <KeyboardAvoidingView
+        behavior="position"
+        style={{
+          height: '100%',
+        }}>
+        <View>
+          <Image
+            source={require('../../assets/home-car.jpg')}
+            style={{ height: imageHeight, width: imageWidth, marginTop: 32, marginBottom: 24 }}
+          />
+          <View
+            style={{
+              padding: 20,
+            }}>
+            <Text text30 style={{ fontWeight: 'bold', marginBottom: 16 }}>
+              Inscrivez-vous !
+            </Text>
+            <Input
+              placeholder="Adresse email"
+              onChangeText={handleChangeValue('email')}
+              enableErrors
+              validate={['required', 'email']}
+              validationMessage={['Champ requis.', 'Adresse email invalide.']}
+              validateOnBlur
+              onChangeValidity={handleValidateInput('email')}
+              isValid={formState?.email?.isValid}
+            />
+            <Input
+              type="password"
+              placeholder="Mot de passe"
+              enableErrors
+              validate={['required', validatePassword]}
+              validationMessage={[
+                'Champ requis.',
+                'Le mot de passe doit contenir au moins 8 caractères.',
+              ]}
+              onChangeText={handleChangeValue('password')}
+              validateOnChange
+              onChangeValidity={handleValidateInput('password')}
+              isValid={formState?.password?.isValid}
+            />
+            <Input
+              type="password"
+              placeholder="Confirmer le mot de passe"
+              onChangeText={handleChangeValue('passwordConfirm')}
+              enableErrors
+              validate={['required', validatePasswordConfirm(formState?.password?.value)]}
+              validationMessage={['Champ requis.', 'Doit être identique au mot de passe']}
+              validateOnChange
+              onChangeValidity={handleValidateInput('passwordConfirm')}
+              isValid={formState?.passwordConfirm?.isValid}
+            />
+            <Button
+              label="Inscription"
+              borderRadius={8}
+              size={Button.sizes.large}
+              backgroundColor={Colors.primary}
+              onPress={handleSubmit}
+              style={{
+                marginBottom: 24,
+              }}
+            />
+            <Button
+              label="Déjà un compte ? Se connecter"
+              size={Button.sizes.large}
+              link
+              color={Colors.primary}
+              onPress={() => navigation.navigate('Connexion')}
+            />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
