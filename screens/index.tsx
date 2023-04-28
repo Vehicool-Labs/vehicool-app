@@ -23,12 +23,12 @@ const MainStack = () => {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      dispatchCurrentUser(session.user);
+      dispatchCurrentUser(session?.user);
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      dispatchCurrentUser(session.user);
+    supabase.auth.onAuthStateChange((state, session) => {
+      setSession(state === 'SIGNED_IN' ? session : null);
+      dispatchCurrentUser(state === 'SIGNED_IN' && session?.user ? session.user : null);
     });
   }, []);
   return (
@@ -66,7 +66,7 @@ const MainStack = () => {
         ) : (
           <>
             <Stack.Screen
-              name="Connexion"
+              name="SignIn"
               options={{
                 title: 'Vehicool',
                 headerLargeTitle: true,
@@ -76,7 +76,7 @@ const MainStack = () => {
               component={SigninScreen}
             />
             <Stack.Screen
-              name="Inscription"
+              name="SignUp"
               component={SignupScreen}
               options={{
                 title: 'Vehicool',

@@ -72,3 +72,17 @@ export const updateUserEmail = async (newEmail: string): Promise<User | null> =>
     });
   }
 };
+
+export const signOutUser = async (): Promise<void> => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      const translatedError = translateAuthError(error);
+      throw new Error(translatedError.message, { cause: translatedError.title });
+    }
+  } catch (error) {
+    throw new ApiResponseError(error.message || 'Une erreur est survenue.', {
+      cause: error.cause || 'Erreur.',
+    });
+  }
+};

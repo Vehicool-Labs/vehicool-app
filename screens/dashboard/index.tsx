@@ -1,12 +1,9 @@
-import { faUser } from '@fortawesome/pro-light-svg-icons/faUser';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Session } from '@supabase/supabase-js';
 import { useBackgroundPermissions, useForegroundPermissions } from 'expo-location';
 import { useState, useEffect } from 'react';
 import MapView, { LatLng, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import { Button, Colors, View } from 'react-native-ui-lib';
 
-import { supabase } from '../../config/supabase';
 import useLocationObserver from '../../contexts/location/location.observer';
 import { startTrackingLocation, stopTrackingLocation } from '../../services/location.service';
 import { snapToRoad } from '../../services/map.service';
@@ -95,10 +92,6 @@ const DashboardScreen = ({ session }: DashboardScreenProperties) => {
     setIsTripStarted(false);
   };
 
-  const handleLogout = () => {
-    supabase.auth.signOut();
-  };
-
   return (
     <View style={{ flex: 1, position: 'relative' }}>
       <MapView
@@ -131,19 +124,9 @@ const DashboardScreen = ({ session }: DashboardScreenProperties) => {
         }}>
         <Button
           label={isTripStarted ? 'Arrêter le trajet' : 'Démarrer un trajet'}
+          backgroundColor={Colors.primary}
           onPress={isTripStarted ? handleStopTrackingTrip : handleStartTrackingTrip}
         />
-        <Button
-          label="Déconnexion"
-          borderRadius={8}
-          size={Button.sizes.large}
-          backgroundColor={Colors.red30}
-          onPress={handleLogout}
-          style={{
-            marginBottom: 8,
-          }}
-        />
-        <FontAwesomeIcon icon={faUser} />
       </View>
     </View>
   );

@@ -2,14 +2,27 @@ import { faArrowRightFromBracket } from '@fortawesome/pro-light-svg-icons/faArro
 import { faChevronRight } from '@fortawesome/pro-light-svg-icons/faChevronRight';
 import { faUserSlash } from '@fortawesome/pro-light-svg-icons/faUserSlash';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { Alert } from 'react-native';
 import { Button, Colors, Text, View } from 'react-native-ui-lib';
 
 import { useAuthContext } from '../../contexts/auth.context';
+import { signOutUser } from '../../services/auth.service';
+import { ApiResponseError } from '../../utils/error.util';
 
 const ProfileScreen = ({ navigation }) => {
-  const { currentUser } = useAuthContext();
+  const { currentUser, dispatchCurrentUser } = useAuthContext();
 
   const handleGoToUpdateEmail = () => navigation.navigate('UpdateEmail');
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      dispatchCurrentUser(null);
+      navigation.navigate('SignIn');
+    } catch (error) {
+      const apiError: ApiResponseError = error;
+      Alert.alert(apiError.cause || 'Erreur', apiError.message, []);
+    }
+  };
 
   return (
     <View style={{ padding: 20 }}>
@@ -63,7 +76,9 @@ const ProfileScreen = ({ navigation }) => {
         <Text style={{ fontSize: 20, fontWeight: 500, marginBottom: 16, color: Colors.danger }}>
           Zone de danger
         </Text>
-        <View
+        <Button
+          backgroundColor={Colors.transparent}
+          onPress={handleSignOut}
           style={{
             borderColor: Colors.danger,
             borderWidth: 1,
@@ -84,8 +99,10 @@ const ProfileScreen = ({ navigation }) => {
             </Text>
           </View>
           <FontAwesomeIcon icon={faArrowRightFromBracket} color={Colors.danger} />
-        </View>
-        <View
+        </Button>
+        <Button
+          backgroundColor={Colors.transparent}
+          onPress={handleSignOut}
           style={{
             borderColor: Colors.danger,
             borderWidth: 1,
@@ -106,7 +123,7 @@ const ProfileScreen = ({ navigation }) => {
             </Text>
           </View>
           <FontAwesomeIcon icon={faUserSlash} color={Colors.danger} />
-        </View>
+        </Button>
       </View>
     </View>
   );

@@ -26,7 +26,6 @@ const SignupScreen = ({ navigation }) => {
         formState.email.value,
         formState.password.value
       );
-      console.log('SESSION DATA', sessionData);
       navigation.navigate('Dashboard');
     } catch (error) {
       const apiError: ApiResponseError = error;
@@ -107,7 +106,7 @@ const SignupScreen = ({ navigation }) => {
               size={Button.sizes.large}
               link
               color={Colors.primary}
-              onPress={() => navigation.navigate('Connexion')}
+              onPress={() => navigation.navigate('SignIn')}
             />
           </View>
         </View>

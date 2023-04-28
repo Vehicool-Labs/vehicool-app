@@ -46,11 +46,15 @@ const AuthContextProvider = ({ children }: AuthContextProviderProperties) => {
   }, [setCurrentUser]);
 
   const dispatchCurrentUser = useCallback(
-    (user: User) => {
-      setCurrentUser({
-        ...currentUser,
-        ...user,
-      });
+    (user: User | null) => {
+      setCurrentUser(
+        !user
+          ? user
+          : {
+              ...currentUser,
+              ...user,
+            }
+      );
     },
     [setCurrentUser, currentUser]
   );
