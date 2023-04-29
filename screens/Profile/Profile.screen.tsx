@@ -13,6 +13,7 @@ const ProfileScreen = ({ navigation }) => {
   const { currentUser, dispatchCurrentUser } = useAuthContext();
 
   const handleGoToUpdateEmail = () => navigation.navigate('UpdateEmail');
+  const handleGoToUpdatePassword = () => navigation.navigate('UpdatePassword');
   const handleSignOut = async () => {
     try {
       await signOutUser();
@@ -51,7 +52,9 @@ const ProfileScreen = ({ navigation }) => {
           </View>
           <FontAwesomeIcon icon={faChevronRight} />
         </Button>
-        <View
+        <Button
+          backgroundColor={Colors.transparent}
+          onPress={handleGoToUpdatePassword}
           style={{
             borderColor: Colors.light,
             borderWidth: 1,
@@ -70,7 +73,7 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={{ fontWeight: 'bold' }}>Mot de passe</Text>
           </View>
           <FontAwesomeIcon icon={faChevronRight} />
-        </View>
+        </Button>
       </View>
       <View style={{ marginBottom: 16 }}>
         <Text style={{ fontSize: 20, fontWeight: 500, marginBottom: 16, color: Colors.danger }}>
