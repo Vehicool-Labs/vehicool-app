@@ -39,7 +39,7 @@ const UpdateEmailScreen = () => {
         <Button label="Enregistrer" link color={Colors.primary} onPress={handleSaveEmail} />
       ),
     });
-  }, []);
+  }, [formState]);
 
   return (
     <View style={{ padding: 20 }}>

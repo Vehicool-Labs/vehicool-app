@@ -22,13 +22,15 @@ const MainStack = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('MAIN GET SESSION >>>', session);
       setSession(session);
       dispatchCurrentUser(session?.user);
     });
 
     supabase.auth.onAuthStateChange((state, session) => {
-      setSession(state === 'SIGNED_IN' ? session : null);
-      dispatchCurrentUser(state === 'SIGNED_IN' && session?.user ? session.user : null);
+      console.log('MAIN AUTH STATE CHANGED >>>', state, session);
+      setSession(session);
+      dispatchCurrentUser(session?.user || null);
     });
   }, []);
   return (

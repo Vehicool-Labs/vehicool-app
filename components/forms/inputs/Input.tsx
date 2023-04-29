@@ -7,7 +7,7 @@ type InputProperties = TextFieldProps & {
 
 const Input = ({ type = 'text', isValid = true, ...rest }: InputProperties) => {
   return (
-    <View style={{ marginBottom: 16 }}>
+    <View style={{ marginBottom: 0 }}>
       <TextField
         secureTextEntry={type === 'password'}
         style={{
@@ -21,7 +21,6 @@ const Input = ({ type = 'text', isValid = true, ...rest }: InputProperties) => {
         }}
         validationMessageStyle={{
           paddingLeft: 16,
-          paddingTop: 4,
         }}
         {...rest}
       />

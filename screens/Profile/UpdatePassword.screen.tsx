@@ -4,21 +4,27 @@ import { Alert } from 'react-native';
 import { Button, Colors, View } from 'react-native-ui-lib';
 
 import Input from '../../components/forms/inputs/Input';
+import { useAuthContext } from '../../contexts/auth.context';
 import useForm from '../../hooks/useForm';
+import { updateUserPassword } from '../../services/auth.service';
 import { ApiResponseError } from '../../utils/error.util';
 import { validatePassword, validatePasswordConfirm } from '../../utils/form-validation.util';
 
 const UpdatePasswordScreen = () => {
   const { formState, handleChangeValue, handleValidateInput, isFormInvalid } = useForm({});
+  const { currentUser } = useAuthContext();
 
   const navigation = useNavigation();
 
-  const handleSaveEmail = async () => {
+  const handleSaveNewPassword = async () => {
     if (isFormInvalid) {
       return;
     }
     try {
-      // const user = await updateUserEmail(formState?.email?.value.trim());
+      await updateUserPassword(currentUser, {
+        currentPassword: formState?.password?.value,
+        newPassword: formState?.newPassword?.value,
+      });
       navigation.goBack();
     } catch (error) {
       const apiError: ApiResponseError = error;
@@ -29,20 +35,21 @@ const UpdatePasswordScreen = () => {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button label="Enregistrer" link color={Colors.primary} onPress={handleSaveEmail} />
+        <Button label="Enregistrer" link color={Colors.primary} onPress={handleSaveNewPassword} />
       ),
     });
-  }, []);
+  }, [formState]);
 
   return (
     <View style={{ padding: 20 }}>
       <Input
+        type="password"
         placeholder="Mot de passe actuel"
         value={formState?.password?.value || ''}
         onChangeText={handleChangeValue('password')}
         enableErrors
         textContentType="password"
-        validate={['required', 'email']}
+        validate={['required']}
         validationMessage={['Champ requis.']}
         validateOnChange
         onChangeValidity={handleValidateInput('password')}
@@ -60,6 +67,7 @@ const UpdatePasswordScreen = () => {
         onChangeText={handleChangeValue('newPassword')}
         validateOnChange
         onChangeValidity={handleValidateInput('newPassword')}
+        value={formState?.newPassword?.value || ''}
         isValid={formState?.newPassword?.isValid}
       />
       <Input
@@ -71,6 +79,7 @@ const UpdatePasswordScreen = () => {
         validationMessage={['Champ requis.', 'Doit être identique au mot de passe']}
         validateOnChange
         onChangeValidity={handleValidateInput('passwordConfirm')}
+        value={formState?.passwordConfirm?.value || ''}
         isValid={formState?.passwordConfirm?.isValid}
       />
     </View>

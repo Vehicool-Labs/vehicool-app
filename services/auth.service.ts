@@ -73,6 +73,32 @@ export const updateUserEmail = async (newEmail: string): Promise<User | null> =>
   }
 };
 
+type PasswordUpdateDTO = { currentPassword: string; newPassword: string };
+
+export const updateUserPassword = async (
+  currentUser: User,
+  { currentPassword, newPassword }: PasswordUpdateDTO
+): Promise<void> => {
+  console.log('CURRENT PASSWORD', currentPassword);
+  console.log('NEW PASSWORD', newPassword);
+  try {
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: currentUser.email,
+      password: currentPassword,
+    });
+    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    const error = signInError || updateError;
+    if (error) {
+      const translatedError = translateAuthError(error);
+      throw new Error(translatedError.message, { cause: translatedError.title });
+    }
+  } catch (error) {
+    throw new ApiResponseError(error.message || 'Une erreur est survenue.', {
+      cause: error.cause || 'Erreur.',
+    });
+  }
+};
+
 export const signOutUser = async (): Promise<void> => {
   try {
     const { error } = await supabase.auth.signOut();
