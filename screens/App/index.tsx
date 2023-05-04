@@ -1,6 +1,8 @@
+import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import {
   faCar,
   faChartMixed,
+  faPlusCircle,
   faRoad,
   faSteeringWheel,
   faUser,
@@ -60,6 +62,22 @@ const AppStack = () => {
             <FontAwesomeIcon icon={faRoad} color={color} size={size} />
           ),
         }}
+      />
+      <Tab.Screen
+        name="Plus"
+        component={MyTripsScreen}
+        options={{
+          title: 'Nouveau',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesomeIcon icon={faPlusCircle} color={color} size={size} />
+          ),
+        }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('New');
+          },
+        })}
       />
       <Tab.Screen
         name="MyGarageScreen"

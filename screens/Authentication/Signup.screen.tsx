@@ -23,8 +23,9 @@ const SignupScreen = ({ navigation }) => {
     }
     try {
       await signUpWithEmailAndPassword(formState.email.value, formState.password.value);
-      navigation.navigate('App');
+      navigation.navigate('App', { screen: 'HomeScreen' });
     } catch (error) {
+      console.error(error);
       const apiError: ApiResponseError = error;
       Alert.alert(apiError.cause || 'Erreur', apiError.message, []);
     }

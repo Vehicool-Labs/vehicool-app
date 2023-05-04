@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 
 import AppStack from './App';
 import AuthenticationStack from './Authentication';
+import NewStack from './New';
 import ProfileStack from './Profile';
 import { supabase } from '../config/supabase';
 import { useAuthContext } from '../contexts/auth.context';
@@ -60,6 +61,14 @@ const MainStack = () => {
               }}
               component={ProfileStack}
               name="Profile"
+            />
+            <Stack.Screen
+              options={{
+                presentation: 'modal',
+                headerShown: false,
+              }}
+              component={NewStack}
+              name="New"
             />
           </>
         ) : (
