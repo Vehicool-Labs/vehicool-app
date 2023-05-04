@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import MapView, { LatLng, PROVIDER_GOOGLE, Polyline } from 'react-native-maps';
 import { Button, Colors, View } from 'react-native-ui-lib';
 
-import useLocationObserver from '../../contexts/location/location.observer';
-import { startTrackingLocation, stopTrackingLocation } from '../../services/location.service';
-import { snapToRoad } from '../../services/map.service';
+import useLocationObserver from '../../../contexts/location/location.observer';
+import { startTrackingLocation, stopTrackingLocation } from '../../../services/location.service';
+import { snapToRoad } from '../../../services/map.service';
 
-type DashboardScreenProperties = { session: Session };
+type HomeScreenProperties = { session: Session };
 
-const DashboardScreen = ({ session }: DashboardScreenProperties) => {
+const HomeScreen = ({ session }: HomeScreenProperties) => {
   const [isTripStarted, setIsTripStarted] = useState(false);
   const [roadWaypoints, setRoadWaypoints] = useState([]);
 
@@ -132,4 +132,4 @@ const DashboardScreen = ({ session }: DashboardScreenProperties) => {
   );
 };
 
-export default DashboardScreen;
+export default HomeScreen;

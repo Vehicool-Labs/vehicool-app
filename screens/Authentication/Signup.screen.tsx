@@ -1,18 +1,20 @@
 import { Alert, Dimensions, KeyboardAvoidingView, SafeAreaView } from 'react-native';
-import { Button, Colors, Text, View, Image } from 'react-native-ui-lib';
+import { Button, Colors, Image, Text, View } from 'react-native-ui-lib';
 
 import Input from '../../components/forms/inputs/Input';
 import useForm from '../../hooks/useForm';
-import { signInWithEmailAndPassword } from '../../services/auth.service';
+import { signUpWithEmailAndPassword } from '../../services/auth.service';
 import { ApiResponseError } from '../../utils/error.util';
+
+const validatePassword = (value: string) => value.length >= 8;
+const validatePasswordConfirm = (valueToCompare: string) => (value: string) =>
+  valueToCompare === value;
 
 const dimensions = Dimensions.get('window');
 const imageHeight = Math.round((dimensions.width * 9) / 16);
 const imageWidth = dimensions.width;
 
-const validatePassword = (value: string) => value.length >= 8;
-
-const SigninScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation }) => {
   const { formState, handleChangeValue, handleValidateInput, isFormInvalid } = useForm({});
 
   const handleSubmit = async () => {
@@ -20,12 +22,10 @@ const SigninScreen = ({ navigation }) => {
       return;
     }
     try {
-      const sessionData = await signInWithEmailAndPassword(
-        formState.email.value,
-        formState.password.value
-      );
-      navigation.navigate('Dashboard');
+      await signUpWithEmailAndPassword(formState.email.value, formState.password.value);
+      navigation.navigate('App', { screen: 'HomeScreen' });
     } catch (error) {
+      console.error(error);
       const apiError: ApiResponseError = error;
       Alert.alert(apiError.cause || 'Erreur', apiError.message, []);
     }
@@ -52,36 +52,45 @@ const SigninScreen = ({ navigation }) => {
               padding: 20,
             }}>
             <Text text30 style={{ fontWeight: 'bold', marginBottom: 16 }}>
-              Connectez-vous !
+              Inscrivez-vous !
             </Text>
             <Input
               placeholder="Adresse email"
               onChangeText={handleChangeValue('email')}
               enableErrors
-              textContentType="emailAddress"
               validate={['required', 'email']}
               validationMessage={['Champ requis.', 'Adresse email invalide.']}
-              validateOnChange
+              validateOnBlur
               onChangeValidity={handleValidateInput('email')}
-              isValid={formState.email?.isValid}
+              isValid={formState?.email?.isValid}
             />
             <Input
-              placeholder="Mot de passe"
-              onChangeText={handleChangeValue('password')}
-              enableErrors
               type="password"
+              placeholder="Mot de passe"
+              enableErrors
               validate={['required', validatePassword]}
-              textContentType="password"
               validationMessage={[
                 'Champ requis.',
                 'Le mot de passe doit contenir au moins 8 caractères.',
               ]}
-              isValid={formState.password?.isValid}
+              onChangeText={handleChangeValue('password')}
               validateOnChange
               onChangeValidity={handleValidateInput('password')}
+              isValid={formState?.password?.isValid}
+            />
+            <Input
+              type="password"
+              placeholder="Confirmer le mot de passe"
+              onChangeText={handleChangeValue('passwordConfirm')}
+              enableErrors
+              validate={['required', validatePasswordConfirm(formState?.password?.value)]}
+              validationMessage={['Champ requis.', 'Doit être identique au mot de passe']}
+              validateOnChange
+              onChangeValidity={handleValidateInput('passwordConfirm')}
+              isValid={formState?.passwordConfirm?.isValid}
             />
             <Button
-              label="Connexion"
+              label="Inscription"
               borderRadius={8}
               size={Button.sizes.large}
               backgroundColor={Colors.primary}
@@ -91,11 +100,11 @@ const SigninScreen = ({ navigation }) => {
               }}
             />
             <Button
-              label="Pas de compte ? S'inscrire"
+              label="Déjà un compte ? Se connecter"
               size={Button.sizes.large}
               link
               color={Colors.primary}
-              onPress={() => navigation.navigate('SignUp')}
+              onPress={() => navigation.navigate('Authentication', { screen: 'SignInScreen' })}
             />
           </View>
         </View>
@@ -104,4 +113,4 @@ const SigninScreen = ({ navigation }) => {
   );
 };
 
-export default SigninScreen;
+export default SignupScreen;

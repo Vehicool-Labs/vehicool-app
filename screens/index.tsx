@@ -1,15 +1,12 @@
-import { faUser } from '@fortawesome/pro-light-svg-icons/faUser';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
-import { Button, Colors } from 'react-native-ui-lib';
 
+import AppStack from './App';
+import AuthenticationStack from './Authentication';
+import NewStack from './New';
 import ProfileStack from './Profile';
-import SigninScreen from './auth/Signin';
-import SignupScreen from './auth/Signup';
-import DashboardScreen from './dashboard';
 import { supabase } from '../config/supabase';
 import { useAuthContext } from '../contexts/auth.context';
 
@@ -38,7 +35,7 @@ const MainStack = () => {
       <Stack.Navigator>
         {session?.user ? (
           <>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="Dashboard"
               component={DashboardScreen}
               options={({ navigation }) => ({
@@ -55,7 +52,8 @@ const MainStack = () => {
                   </Button>
                 ),
               })}
-            />
+            /> */}
+            <Stack.Screen name="App" component={AppStack} options={{ headerShown: false }} />
             <Stack.Screen
               options={{
                 presentation: 'modal',
@@ -64,32 +62,17 @@ const MainStack = () => {
               component={ProfileStack}
               name="Profile"
             />
+            <Stack.Screen
+              options={{
+                presentation: 'modal',
+                headerShown: false,
+              }}
+              component={NewStack}
+              name="New"
+            />
           </>
         ) : (
-          <>
-            <Stack.Screen
-              name="SignIn"
-              options={{
-                title: 'Vehicool',
-                headerLargeTitle: true,
-                headerShadowVisible: false,
-                headerStyle: { backgroundColor: Colors.white },
-              }}
-              component={SigninScreen}
-            />
-            <Stack.Screen
-              name="SignUp"
-              component={SignupScreen}
-              options={{
-                title: 'Vehicool',
-                headerLargeTitle: true,
-                headerShadowVisible: false,
-                headerStyle: { backgroundColor: Colors.white },
-                headerBackButtonMenuEnabled: false,
-                headerBackVisible: false,
-              }}
-            />
-          </>
+          <Stack.Screen name="Authentication" component={AuthenticationStack} />
         )}
       </Stack.Navigator>
     </NavigationContainer>
