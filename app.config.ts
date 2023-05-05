@@ -44,6 +44,7 @@ const AppConfig = ({ config }: ConfigContext): ExpoConfig => ({
     supabaseURL: process.env.SUPABASE_PROJECT_URL,
     publicSupabaseKey: process.env.PUBLIC_SUPABASE_KEY,
     googleMapsAPIKey: process.env.GOOGLE_MAPS_API_KEY,
+    autoPassToken: process.env.AUTO_PASS_API_TOKEN,
     eas: {
       projectId: process.env.EAS_PROJECT_ID,
     },

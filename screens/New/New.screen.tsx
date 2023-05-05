@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Button, Colors, Text, View } from 'react-native-ui-lib';
 
 const NewScreen = ({ navigation }) => {
-  const handleNewVehicle = () => navigation.navigate('NewVehicleScreen');
+  const handleNewVehicle = () => navigation.navigate('NewVehicle');
 
   // TODO => If no vehicle, hide new trip buttons
 

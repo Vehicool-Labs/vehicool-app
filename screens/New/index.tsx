@@ -2,7 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Colors } from 'react-native-ui-lib';
 
 import NewScreen from './New.screen';
-import NewVehicleScreen from './NewVehicle.screen';
+import NewVehicleStack from './NewVehicle';
+import NewVehicleScreen from './NewVehicle/NewVehicle.screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,12 +21,10 @@ const NewStack = () => {
       />
       <Stack.Screen
         options={{
-          title: 'Nouveau véhicule',
-          headerShadowVisible: false,
-          headerStyle: { backgroundColor: Colors.grey70 },
+          headerShown: false,
         }}
-        component={NewVehicleScreen}
-        name="NewVehicleScreen"
+        component={NewVehicleStack}
+        name="NewVehicle"
       />
     </Stack.Navigator>
   );

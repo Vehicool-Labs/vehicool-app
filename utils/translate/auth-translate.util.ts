@@ -1,11 +1,11 @@
-import { AuthError } from '@supabase/supabase-js';
+import { AuthError, PostgrestError } from '@supabase/supabase-js';
 
 type TranslatedError = {
   title: string;
   message: string;
 };
 
-export const translateAuthError = (error: AuthError): TranslatedError => {
+export const translateAuthError = (error: AuthError | PostgrestError): TranslatedError => {
   switch (error.message) {
     case 'Invalid login credentials':
       return {

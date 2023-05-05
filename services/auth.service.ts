@@ -79,8 +79,6 @@ export const updateUserPassword = async (
   currentUser: User,
   { currentPassword, newPassword }: PasswordUpdateDTO
 ): Promise<void> => {
-  console.log('CURRENT PASSWORD', currentPassword);
-  console.log('NEW PASSWORD', newPassword);
   try {
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: currentUser.email,
